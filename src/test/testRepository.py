@@ -1,5 +1,4 @@
 import unittest
-import re
 from organizer.repository import Repository
 
 class TestRepository(unittest.TestCase):
