@@ -54,6 +54,8 @@ class Repository():
     #master list should be a list of tuples [(int,string)]
     #masterList is mutated by this method
     def _scoreName(self,match,masterList):
+        if match == "" :
+            return None
         for aTuple in masterList:
             lname = aTuple[1].lower() #search should be case insensitive
             if match == lname:
@@ -68,8 +70,3 @@ class Repository():
             return None
         else:
             return masterList[-1][1]
-    
-
- 
- 
- 
