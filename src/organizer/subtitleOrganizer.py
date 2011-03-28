@@ -1,4 +1,5 @@
 from repository import *
+import shutil
 
 class subtitleOrganizer:
     def __init__(self,subRep,movRep):
@@ -12,5 +13,17 @@ class subtitleOrganizer:
         #FUTURE find the matching movie file and rename the subtitlefile
         
         for subFile in self.subtitleRepository.iterOverFiles():
-            yield (subFile, self.movieRepository.placeFile(subFile))
-            
+            target = self.movieRepository.placeFile(subFile)
+            if target:
+                self.transferSub(self.subtitleRepository.rootDir,subFile,target[0],target[1])
+        
+    
+    def transferSub(self,sourceDir,sourceFile,destDir,destFile):
+        """
+        sourceDir is location of sourceFile
+        destDir is location of destFile
+        renames sourceFile to match destfile (minus extension) then moves it to destdir
+        """
+        newName = destFile[:-3] + 'srt'
+
+        shutil.move(sourceDir + sourceFile,destDir + newName) 
