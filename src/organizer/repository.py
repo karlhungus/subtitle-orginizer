@@ -91,10 +91,8 @@ class Repository():
     def _queryList(self,query,theList,criteria,addRoot=True):
         """        
         #generic method to return the member of the list with the highest score
-        #score is determined by matching words in the query
-        #return the filename in the repository with the best score according to query.  None if score of 0
-        #if there is a tie it returns the first instance of the highest score (or whatever max() returns)
-        #scoring: exact matches get 10 points, partial matches get 1 point
+        #score is determined by criteria in the repository's criteria list
+        #Returns None is no match is found otherwise returns the full path directory or local filename
         """
         if not theList: #empty lists cannot be matched
             return None 
@@ -105,7 +103,7 @@ class Repository():
         #should be case insensitive
         lquery = query.lower()
         for aList in masterList:
-            for criterion in criteria:
+            for criterion in criteria: #if criteria is empty nothing should match
                 if aList[0] == 'kill': #score is 'kill' this entry is not a match FUTURE
                     pass
                 elif aList[0] == 'match': #score is 'match' this is the match no further processing required FUTURE
