@@ -1,9 +1,9 @@
-from repository import Repository 
+from repository import *
 
 class subtitleOrganizer:
     def __init__(self,subRep,movRep):
         self.subtitleRepository = Repository(subRep)
-        self.movieRepository = Repository(movRep)
+        self.movieRepository = TVRepository(movRep)
         
         
     def organize(self):
@@ -12,5 +12,5 @@ class subtitleOrganizer:
         #FUTURE find the matching movie file and rename the subtitlefile
         
         for subFile in self.subtitleRepository.iterOverFiles():
-            yield (subFile, self.movieRepository.dirWithScore(subFile))
+            yield (subFile, self.movieRepository.placeFile(subFile))
             
