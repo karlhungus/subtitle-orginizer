@@ -52,16 +52,15 @@ class Repository():
             self._addChildRepo(destination) 
         
         repository = self._getChildRepo(destination)
-        
         #pass the query to the next repository
         return repository.placeFile(theFile)
     
-    def fileWithScore(self,query,requirement=None):
-        return self._queryList(query,self.fileList,self.filecriteria,False)
+    def fileWithScore(self,query):
+        return self._queryList(query,self.fileList,self.filecriteria,retTuple=True)
     
     
-    def dirWithScore(self,query,requirement=None):
-        return self._queryList(query,self.dirList,self.dircriteria,True)
+    def dirWithScore(self,query):
+        return self._queryList(query,self.dirList,self.dircriteria,retTuple=False)
  
     #end publics
     
@@ -88,7 +87,7 @@ class Repository():
     #end privates
     
     #private query methods
-    def _queryList(self,query,theList,criteria,addRoot=True):
+    def _queryList(self,query,theList,criteria,retTuple=False):
         """        
         #generic method to return the member of the list with the highest score
         #score is determined by criteria in the repository's criteria list
@@ -107,22 +106,27 @@ class Repository():
                 if aList[0] == 'kill': #score is 'kill' this entry is not a match FUTURE
                     pass
                 elif aList[0] == 'match': #score is 'match' this is the match no further processing required FUTURE
-                    return self._highscore([aList],addRoot)
+                    return self._highscore([aList],retTuple)
                 else: #continue scoring
                     aList[0] = criterion.score(lquery,aList[1].lower())
                    
-        return self._highscore(masterList,addRoot)
+        return self._highscore(masterList,retTuple)
         
-    def _highscore(self,masterList,addRoot=True):
+    def _highscore(self,masterList,retTuple=False):
+        """
+        returns a string if retTuple is false.  string = rootdir plus the highest scorer in masterlist CASE: directory
+        if retTuple is True, returns a tuple of (rootdir,highest scorer) CASE: file
+        in the case of a directory only filename is None
+        """
         self._removeKills(masterList)
         masterList.sort()
         if masterList[-1][0] == 0:
             return None
         else:
-            if addRoot: #add the root directory info to the result (it is a directory)
+            if retTuple: 
+                return (self.rootDir,masterList[-1][1])
+            else: 
                 return ''.join([self.rootDir,masterList[-1][1],'\\']) # equivalent to: self.Rootdir + masterList[-1][1] + '\\'
-            else: #do not add it, it is a file
-                return masterList[-1][1]
         return None   
     
     def _removeKills(self,masterList):
